@@ -79,7 +79,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         for (float i = 2f; i >= 0; i -= 0.1f)
         {
-            sphereCollider.radius += 0.01f;
+            sphereCollider.radius += 0.1f;
             yield return new WaitForSeconds(0.1f);
         }
         StartCoroutine("Decrease");
@@ -89,7 +89,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         for (float d = 2f; d >= 0; d -= 0.1f)
         {
-            sphereCollider.radius -= 0.01f;
+            sphereCollider.radius -= 0.1f;
             yield return new WaitForSeconds(0.1f);
         }
     }
