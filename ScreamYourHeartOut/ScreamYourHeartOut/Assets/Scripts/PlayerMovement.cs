@@ -14,11 +14,14 @@ public class PlayerMovement : MonoBehaviour {
     private bool Grounded;
     //Jump Counter
     private int JumpCount;
+    //Force applied to enemy
+    public int Force;
 
     //Raycasting
     private RaycastHit vision; // Used for detecting Raycast collision
     public float rayLength; // Used for assigning a length to the raycast
-
+    
+    private SphereCollider sphereCollider;
 
     // Use this for initialization
     void Start () {
@@ -26,11 +29,34 @@ public class PlayerMovement : MonoBehaviour {
         rbody = this.gameObject.GetComponent<Rigidbody>();
         //Raycasting
         rayLength = 0.75f;
+        //Jump Count
         JumpCount = 0;
+        //Get the player's sphere collider component
+        sphereCollider = this.gameObject.GetComponent<SphereCollider>();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Enemy")
+        {
+            if(other.transform.position.x < this.transform.position.x)
+            {
+                other.gameObject.GetComponent<Rigidbody>().AddForce(new Vector2(-Force, 0), ForceMode.Impulse);
+            }
+            else
+            {
+                other.gameObject.GetComponent<Rigidbody>().AddForce(new Vector2(Force, 0), ForceMode.Impulse);
+            }
+        }
+    }
+
+    // Update is called once per frame
+    void Update () {
+        if (Input.GetKey(KeyCode.R))
+        {
+            StartCoroutine("Increase");
+        }
+        
         //This will constantly draw the ray in our Scene view so we can see where the ray is going
         Debug.DrawRay(transform.position, Vector3.down * rayLength, Color.red, 0.5f);
 
@@ -47,7 +73,26 @@ public class PlayerMovement : MonoBehaviour {
             rbody.AddForce(new Vector2(0, thrust), ForceMode.Impulse);
             JumpCount++;
         }
-	}
+    }
+
+    IEnumerator Increase()
+    {
+        for (float i = 2f; i >= 0; i -= 0.1f)
+        {
+            sphereCollider.radius += 0.01f;
+            yield return new WaitForSeconds(0.1f);
+        }
+        StartCoroutine("Decrease");
+    }
+
+    IEnumerator Decrease()
+    {
+        for (float d = 2f; d >= 0; d -= 0.1f)
+        {
+            sphereCollider.radius -= 0.01f;
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
 
     void FixedUpdate()
     {
