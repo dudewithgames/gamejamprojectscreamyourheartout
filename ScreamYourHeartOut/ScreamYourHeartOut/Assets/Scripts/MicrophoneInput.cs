@@ -55,8 +55,8 @@ public class MicrophoneInput : MonoBehaviour
 		{
 			i = 0;
 			loudnessQ [i] = loudness;
+            i++;
 		}
-
 	}
 
 	void FixedUpdate()
@@ -103,4 +103,15 @@ public class MicrophoneInput : MonoBehaviour
 			Debug.Log (sum/qLen);
 		}
 	}
+
+    float VoiceAveragePerFrame()
+    {
+        float avg = 0f;
+        foreach (int v in loudnessQ)
+        {
+            avg += v;
+        }
+        
+        return avg / loudnessQ.Length;
+    }
 }
