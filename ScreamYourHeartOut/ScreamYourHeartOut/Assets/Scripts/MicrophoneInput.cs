@@ -13,6 +13,8 @@ public class MicrophoneInput : MonoBehaviour
 	public int qLen = 0;
 	private int i;
 	private int sum;
+	private bool left;
+	private bool right;
 	AudioSource _audio;
 
 	private Rigidbody playerRBody;
@@ -21,9 +23,25 @@ public class MicrophoneInput : MonoBehaviour
 	private string[] m_Keywords;
 
 	private KeywordRecognizer m_Recognizer;
+    private float loudnessAvg;
 
-	void Start()
+
+	private Rigidbody rbody;
+	private Animator anim;
+	private float moveSpeed;
+
+    void Start()
 	{
+		moveSpeed = 0.31f;
+		anim = this.gameObject.GetComponent<Animator>();
+		anim.SetBool("IsIdle", true);
+		//Grab Player Rigidbody
+		rbody = this.gameObject.GetComponent<Rigidbody>();
+
+		left = false;
+		right = false;
+
+
 		qLen = loudnessQ.Length;
 		i = 0;
 		_audio = GetComponent<AudioSource>();
@@ -46,6 +64,18 @@ public class MicrophoneInput : MonoBehaviour
 	{
 		loudness = GetAveragedVolume() * sensitivity;
 
+
+		if (left == true) {
+			this.gameObject.GetComponent<SpriteRenderer> ().flipX = true;
+			anim.SetBool ("IsIdle", false);
+			rbody.MovePosition (transform.position + new Vector3 (-moveSpeed, 0));
+
+		} else if (right == true) {
+			this.gameObject.GetComponent<SpriteRenderer> ().flipX = false;
+			anim.SetBool ("IsIdle", false);
+			rbody.MovePosition (transform.position + new Vector3 (moveSpeed, 0));
+		}
+
 		//loudness of last 30 frames
 
 		if (i < qLen) {
@@ -57,22 +87,11 @@ public class MicrophoneInput : MonoBehaviour
 			loudnessQ [i] = loudness;
             i++;
 		}
+        
 	}
 
 	void FixedUpdate()
 	{
-
-		/*if(loudness > 0f && loudness < 1f)
-			Debug.Log (.5f);
-
-		if(loudness > 1f && loudness < 2f)
-			Debug.Log (1.5f);
-
-		if(loudness > 2f && loudness < 3f)
-			Debug.Log (2.5f);
-
-		if(loudness > 3f && loudness < 4f)
-			Debug.Log (3.5f);*/
 	}
 
 	float GetAveragedVolume()
@@ -89,20 +108,36 @@ public class MicrophoneInput : MonoBehaviour
 
 	private void OnPhraseRecognized(PhraseRecognizedEventArgs args)
 	{
-		/*StringBuilder builder = new StringBuilder();
+        /*StringBuilder builder = new StringBuilder();
 		builder.AppendFormat("{0} ({1}){2}", args.text, args.confidence, Environment.NewLine);
 		builder.AppendFormat("\tTimestamp: {0}{1}", args.phraseStartTime, Environment.NewLine);
 		builder.AppendFormat("\tDuration: {0} seconds{1}", args.phraseDuration.TotalSeconds, Environment.NewLine);
 		Debug.Log(builder.ToString());*/
-		sum = 0;
-		foreach (int item in loudnessQ) {
-			sum += item;
+
+        loudnessAvg = VoiceAveragePerFrame();
+        Debug.Log(loudnessAvg);
+		if (args.text == "Jump") {
+			if (loudnessAvg > .5f && loudnessAvg < 10f) {
+				Debug.Log ("Jump");
+				playerRBody.AddForce (Vector3.up * 10, ForceMode.Impulse);
+			}
+		} else if (args.text == "Freeze") {
+			Time.timeScale = 0;
+		} else if (args.text == "Unfreeze") {
+			Time.timeScale = 1;
+		} else if (args.text == "Left") {
+			left = true;
+			right = false;
+		} else if (args.text == "Right") {
+			right = true;
+			left = false;
+		} else if (args.text == "Stop") {
+			right = false;
+			left = false;
+			anim.SetBool("IsIdle", true);
 		}
 
-		if (args.text == "jump") {
-			Debug.Log (sum/qLen);
-		}
-	}
+    }
 
     float VoiceAveragePerFrame()
     {
