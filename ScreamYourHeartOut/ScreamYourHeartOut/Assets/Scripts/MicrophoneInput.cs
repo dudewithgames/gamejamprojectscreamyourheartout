@@ -15,9 +15,11 @@ public class MicrophoneInput : MonoBehaviour
 	private int sum;
 	private bool left;
 	private bool right;
+    private bool respawn;
 	AudioSource _audio;
 
 	private Rigidbody playerRBody;
+    private GameObject player;
 
 	[SerializeField]
 	private string[] m_Keywords;
@@ -25,13 +27,18 @@ public class MicrophoneInput : MonoBehaviour
 	private KeywordRecognizer m_Recognizer;
     private float loudnessAvg;
 
+    public GameObject Shout;
+    public GameObject ShoutEffect;
+    private SphereCollider sphereCollider;
 
-	private Rigidbody rbody;
+    private Rigidbody rbody;
 	private Animator anim;
 	private float moveSpeed;
 
     void Start()
 	{
+        sphereCollider = this.gameObject.GetComponent<SphereCollider>();
+        player = this.gameObject;
 		moveSpeed = 0.31f;
 		anim = this.gameObject.GetComponent<Animator>();
 		anim.SetBool("IsIdle", true);
@@ -40,7 +47,7 @@ public class MicrophoneInput : MonoBehaviour
 
 		left = false;
 		right = false;
-
+        respawn = false;
 
 		qLen = loudnessQ.Length;
 		i = 0;
@@ -52,8 +59,7 @@ public class MicrophoneInput : MonoBehaviour
 		_audio.Play();
 
 		playerRBody = GetComponent<Rigidbody>();
-
-
+        
 		m_Recognizer = new KeywordRecognizer(m_Keywords);
 		m_Recognizer.OnPhraseRecognized += OnPhraseRecognized;
 		m_Recognizer.Start();
@@ -62,8 +68,7 @@ public class MicrophoneInput : MonoBehaviour
 
 	void Update()
 	{
-		loudness = GetAveragedVolume() * sensitivity;
-
+        loudness = GetAveragedVolume() * sensitivity;
 
 		if (left == true) {
 			this.gameObject.GetComponent<SpriteRenderer> ().flipX = true;
@@ -79,21 +84,17 @@ public class MicrophoneInput : MonoBehaviour
 		//loudness of last 30 frames
 
 		if (i < qLen) {
-			loudnessQ [i] = loudness;
+			loudnessQ[i] = loudness;
 			i++;
 		} else 
 		{
 			i = 0;
-			loudnessQ [i] = loudness;
+			loudnessQ[i] = loudness;
             i++;
 		}
         
 	}
-
-	void FixedUpdate()
-	{
-	}
-
+    
 	float GetAveragedVolume()
 	{
 		float [] data = new float[256];
@@ -116,26 +117,55 @@ public class MicrophoneInput : MonoBehaviour
 
         loudnessAvg = VoiceAveragePerFrame();
         Debug.Log(loudnessAvg);
-		if (args.text == "Jump") {
-			if (loudnessAvg > .5f && loudnessAvg < 10f) {
-				Debug.Log ("Jump");
-				playerRBody.AddForce (Vector3.up * 10, ForceMode.Impulse);
-			}
-		} else if (args.text == "Freeze") {
-			Time.timeScale = 0;
-		} else if (args.text == "Unfreeze") {
-			Time.timeScale = 1;
-		} else if (args.text == "Left") {
-			left = true;
-			right = false;
-		} else if (args.text == "Right") {
-			right = true;
-			left = false;
-		} else if (args.text == "Stop") {
-			right = false;
-			left = false;
-			anim.SetBool("IsIdle", true);
-		}
+
+        Shout = (GameObject)Instantiate(ShoutEffect, (this.transform.position + new Vector3(0, 3.3f, 0)), transform.rotation);
+
+        if (args.text == "Jump" || args.text == "Roof")
+        {
+            Debug.Log("Jump");
+            playerRBody.AddForce(Vector3.up * 15, ForceMode.Impulse);
+            anim.SetTrigger("Jump");
+        }
+        else if (args.text == "Freeze")
+        {
+            Time.timeScale = 0;
+        }
+        else if (args.text == "Unfreeze")
+        {
+            StartCoroutine("Increase");
+            Time.timeScale = 1;
+        }
+        else if (args.text == "Left")
+        {
+            left = true;
+            right = false;
+        }
+        else if (args.text == "Right")
+        {
+            right = true;
+            left = false;
+        }
+        else if (args.text == "Stop")
+        {
+            right = false;
+            left = false;
+            anim.SetBool("IsIdle", true);
+        }
+        else if (args.text == "Respawn")
+        {
+            right = false;
+            left = false;
+            player.transform.position = new Vector3(0, .5f, 0);
+            playerRBody.velocity = new Vector3(0, 0, 0);
+        }
+        else if (args.text == "Quit")
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+        }
 
     }
 
