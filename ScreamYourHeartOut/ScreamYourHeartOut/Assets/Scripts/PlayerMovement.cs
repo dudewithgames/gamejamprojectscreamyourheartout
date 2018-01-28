@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour {
     //Force applied to enemy
     public int Force;
 
+    private Animator anim;
+
     //Raycasting
     private RaycastHit vision; // Used for detecting Raycast collision
     public float rayLength; // Used for assigning a length to the raycast
@@ -25,10 +27,12 @@ public class PlayerMovement : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        anim = this.gameObject.GetComponent<Animator>();
+        anim.SetBool("IsIdle", true);
         //Grab Player Rigidbody
         rbody = this.gameObject.GetComponent<Rigidbody>();
         //Raycasting
-        rayLength = 0.75f;
+        rayLength = 4.0f;
         //Jump Count
         JumpCount = 0;
         //Get the player's sphere collider component
@@ -63,9 +67,16 @@ public class PlayerMovement : MonoBehaviour {
         //Check for player input
         if (Input.GetKey(KeyCode.A))
         {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = true;
+            anim.SetBool("IsIdle", false);
             rbody.MovePosition(transform.position + new Vector3(-moveSpeed, 0));
         } else if (Input.GetKey(KeyCode.D)) {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = false;
+            anim.SetBool("IsIdle", false);
             rbody.MovePosition(transform.position + new Vector3(moveSpeed, 0));
+        } else
+        {
+            anim.SetBool("IsIdle", true);
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && Grounded == true && JumpCount < 1)

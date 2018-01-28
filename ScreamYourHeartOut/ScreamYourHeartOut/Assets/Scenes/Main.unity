@@ -569,7 +569,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 569974153}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.5, y: 1.462, z: 0}
+  m_LocalPosition: {x: 27.4, y: 1.462, z: 0}
   m_LocalScale: {x: 1, y: 17.162418, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -794,7 +794,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 883690834}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.3, y: 5.6, z: 0}
+  m_LocalPosition: {x: 21, y: 5.6, z: 0}
   m_LocalScale: {x: 7.7460737, y: 0.7752665, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -876,7 +876,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 918496322}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 12.8, z: 0}
+  m_LocalPosition: {x: 5.5, y: 12.8, z: 0}
   m_LocalScale: {x: 7.7460737, y: 0.7752665, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -958,7 +958,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 960124086}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35.1, y: 13.5, z: 0}
+  m_LocalPosition: {x: 35.1, y: 16.6, z: 0}
   m_LocalScale: {x: 7.7460737, y: 0.7752665, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1040,7 +1040,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1138881187}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.8, y: 5.6, z: 0}
+  m_LocalPosition: {x: -17.8, y: 9.6, z: 0}
   m_LocalScale: {x: 7.7460737, y: 0.7752665, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1151,8 +1151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7efa32411aebae4b92c7cd6dd074d64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrust: 8
-  moveSpeed: 0.1
+  thrust: 25
+  moveSpeed: 0.5
   Force: 5
   rayLength: 4
 --- !u!54 &1679056509
@@ -1252,6 +1252,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensitivity: 100
   loudness: 0
+  loudnessQ:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  qLen: 0
+  m_Keywords:
+  - Jump
+  - Left
+  - Right
+  - Shout
 --- !u!135 &1679056515
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1420,7 +1457,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1819385990}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 9.13, y: 0, z: 5.27}
+  m_LocalPosition: {x: 34.1, y: 0, z: 19.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
