@@ -87,14 +87,24 @@ public class MicrophoneInput : MonoBehaviour
 
         loudnessAvg = VoiceAveragePerFrame();
         Debug.Log(loudnessAvg);
-		if (args.text == "Jump") {
+        if (args.text == "Jump")
+        {
             if (loudnessAvg > .5f && loudnessAvg < 10f)
             {
                 Debug.Log("Jump");
                 playerRBody.AddForce(Vector3.up * 10, ForceMode.Impulse);
             }
-		}
-	}
+        }
+        else if (args.text == "Freeze")
+        {
+            Time.timeScale = 0;
+        }
+        else if (args.text == "Unfreeze")
+        {
+            Time.timeScale = 1;
+        }
+
+    }
 
     float VoiceAveragePerFrame()
     {
